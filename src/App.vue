@@ -1,8 +1,18 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from 'vue-router';
 </script>
 
 <template>
+  <header>
+    <nav>
+      <RouterLink to="/">Homepage</RouterLink>
+      <RouterLink to="/tasks-kanban">Kanban Tasks</RouterLink>
+    </nav>
+  </header>
+
+  <RouterView />
+
   <div>
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
