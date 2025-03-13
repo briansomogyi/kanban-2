@@ -1,16 +1,16 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router"
+import { RouterView } from "vue-router"
+import NavBar from "./components/NavBar.vue"
 </script>
 
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/">Homepage</RouterLink>
-      <RouterLink to="/tasks-kanban">Kanban Tasks</RouterLink>
-    </nav>
-  </header>
+  <NavBar />
 
-  <RouterView />
+  <div class="mt-25">
+    <RouterView />
+  </div>
+
+  <footer>Copyright 2025</footer>
 </template>
 
 <style>

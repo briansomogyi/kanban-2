@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-export const useKanban = defineStore('kanban', {
+export const useKanban = defineStore("kanban", {
   state: () => {
     return {
-     	tasks: []
+      lists: []
     }
-  },
+  }
 })
