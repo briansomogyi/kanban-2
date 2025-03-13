@@ -3,7 +3,7 @@ services:
     build: .docker
     stdin_open: true
     tty: true
-    container_name: app.curs2
+    container_name: app.kanban
     environment:
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: true
