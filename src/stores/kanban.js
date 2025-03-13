@@ -5,5 +5,10 @@ export const useKanban = defineStore("kanban", {
     return {
       lists: []
     }
+  },
+  actions: {
+    addNewList(columnName) {
+      this.lists.push({ name: columnName })
+    }
   }
 })
