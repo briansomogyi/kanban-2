@@ -8,6 +8,13 @@ const kanbanStore = useKanban()
 
 <template>
   <h1 class="p-3">Kanban Tasks</h1>
-  <TasksList v-for="(list, index) in kanbanStore.lists" :key="index" :columnName="list.name" />
-  <AddNewList />
+  <div class="flex">
+    <TasksList
+      v-for="(list, index) in kanbanStore.lists"
+      :key="index"
+      :columnName="list.name"
+      :columnId="index"
+    />
+    <AddNewList />
+  </div>
 </template>
