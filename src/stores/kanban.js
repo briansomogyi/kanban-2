@@ -12,6 +12,9 @@ export const useKanban = defineStore("kanban", {
     },
     deleteList(id) {
       this.lists.splice(id, 1)
+    },
+    addNewTask(taskName, columnId) {
+      this.lists[columnId].tasks.push({ name: taskName })
     }
   }
 })
