@@ -1,6 +1,6 @@
 services:
   app:
-    build: .docker
+    build: .docker/app
     stdin_open: true
     tty: true
     container_name: app.kanban
@@ -10,9 +10,29 @@ services:
       CHOKIDAR_INTERVAL: 100
     ports:
       - "5173:5173"
+      - "4173:4173"
     volumes:
       - .:/app
       # exclude
       - /app/.git/
+      - /app/api/
     working_dir: /app
+    user: 1000:1000
+
+  api:
+    build: .docker/api
+    stdin_open: true
+    tty: true
+    container_name: api.kanban
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: true
+      CHOKIDAR_INTERVAL: 100
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/api
+      # exclude
+      # - /api/.git/
+    working_dir: /api
     user: 1000:1000
