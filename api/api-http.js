@@ -10,9 +10,15 @@ const server = http.createServer((req, res) => {
 
   console.log("Headers ", req.rawHeaders)
   //   res.statusCode = 200
-  res.setHeader("Content-Type", "text/plain")
+  // res.setHeader("Content-Type", "text/plain")
+  res.setHeader("Content-Type", "application/json")
   res.writeHead(200, headers)
-  res.end("Hello World TEST")
+  res.end(
+    JSON.stringify({
+      name: "Radu",
+      age: "30"
+    })
+  )
 })
 
 server.listen(port, hostname, () => {
