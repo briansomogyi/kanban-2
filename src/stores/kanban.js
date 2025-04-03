@@ -1,5 +1,7 @@
 import { defineStore } from "pinia"
 
+import axios from "axios"
+
 export const useKanban = defineStore("kanban", {
   state: () => {
     return {
@@ -7,6 +9,11 @@ export const useKanban = defineStore("kanban", {
     }
   },
   actions: {
+    fetchKanbanLists() {
+      axios.get("http://localhost:3000/kanban").then(response => {
+        this.lists = response.data
+      })
+    },
     addNewList(columnName) {
       this.lists.push({ name: columnName, tasks: [] })
     },
