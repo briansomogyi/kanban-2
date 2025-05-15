@@ -36,3 +36,38 @@ services:
       # - /api/.git/
     working_dir: /api
     user: 1000:1000
+
+  mysql:
+    image: mysql:8.0.40
+    container_name: mysql.kanban
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: kanban
+      MYSQL_USER: kanban
+      MYSQL_PASSWORD: kanban
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./.docker/mysql/utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf:ro
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./database:/database:rw
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2.1
+    container_name: pma.kanban
+    ports:
+      - "8088:80"
+    environment:
+      PMA_HOST: mysql.kanban
+      PMA_USER: kanban
+      PMA_PASSWORD: kanban
+      UPLOAD_LIMIT: 250M
+    #networks:
+    # - default
+    restart: always
+
+volumes:
+  mysql_data:
+    driver: local

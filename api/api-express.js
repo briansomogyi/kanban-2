@@ -5,6 +5,8 @@ const router = express.Router()
 const api = express()
 const port = 3000
 
+import { List } from "./db.js"
+
 // Add headers before the routes are defined
 api.use(function (req, res, next) {
   // Website you wish to allow to connect
@@ -37,7 +39,8 @@ api.get("/kanban", (req, res) => {
 
 api.post("/kanban/add-new-list", (req, res) => {
   const { name } = req.body
-  lists.push({ name: name, tasks: [] })
+  List.create({ name: name })
+  // lists.push({ name: name, tasks: [] })
 })
 
 api.post("/kanban/add-new-task", (req, res) => {
@@ -46,8 +49,14 @@ api.post("/kanban/add-new-task", (req, res) => {
 })
 
 api.delete("/kanban/delete-list", (req, res) => {
+  console.log("DELETE")
   const { id } = req.body
-  lists.splice(id, 1)
+  List.destroy({
+    where: {
+      id: id
+    }
+  })
+  // lists.splice(id, 1)
 })
 
 api.listen(port, () => {
