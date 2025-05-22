@@ -57,3 +57,6 @@ export const Task = sequelize.define(
     paranoid: true
   }
 )
+
+List.hasMany(Task)
+Task.belongsTo(List)

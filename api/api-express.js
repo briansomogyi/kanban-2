@@ -5,7 +5,7 @@ const router = express.Router()
 const api = express()
 const port = 3000
 
-import { List } from "./db.js"
+import { List, Task } from "./db.js"
 
 // Add headers before the routes are defined
 api.use(function (req, res, next) {
@@ -33,8 +33,34 @@ api.get("/get-started", (req, res) => {
 })
 
 const lists = []
-api.get("/kanban", (req, res) => {
+api.get("/kanban", async (req, res) => {
+  const dbLists = await List.findAll({
+    attributes: ["id", "name"],
+    include: [
+      {
+        model: Task,
+        attributes: ["id", "name", "color"]
+      }
+    ]
+  })
+
+  const lists = []
+  dbLists.forEach(list => {
+    const tasks = []
+    list.dataValues?.Tasks.forEach(task => {
+      tasks.push(task.dataValues)
+    })
+
+    lists.push({
+      id: list.dataValues.id,
+      name: list.dataValues.name,
+      tasks: tasks
+    })
+  })
+
+  console.log(lists)
   res.send(JSON.stringify(lists))
+  // res.send(JSON.stringify(lists))
 })
 
 api.post("/kanban/add-new-list", (req, res) => {
@@ -45,11 +71,12 @@ api.post("/kanban/add-new-list", (req, res) => {
 
 api.post("/kanban/add-new-task", (req, res) => {
   const { columnId, name } = req.body
-  lists[columnId].tasks.push({ name })
+  Task.create({ name: name, ListId: columnId })
+  //lists[columnId].tasks.push({ name })
 })
 
 api.delete("/kanban/delete-list", (req, res) => {
-  console.log("DELETE")
+  // console.log("DELETE")
   const { id } = req.body
   List.destroy({
     where: {

@@ -20,4 +20,15 @@ content-type: application/json
 
 ###
 #
-GET {{mainUrl}}/test
+GET {{mainUrl}}/kanban
+
+
+###
+# 
+POST {{mainUrl}}/kanban/add-new-task
+content-type: application/json
+
+{
+    "columnId": 5,
+    "name": "test"
+}
