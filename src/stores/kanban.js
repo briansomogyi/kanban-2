@@ -14,10 +14,8 @@ export const useKanban = defineStore("kanban", {
         this.lists = response.data
       })
     },
-    addNewList(columnName) {
-      this.lists.push({ name: columnName, tasks: [] })
-
-      axios.post(
+    async addNewList(columnName) {
+      const listResponse = await axios.post(
         "http://localhost:3000/kanban/add-new-list",
         { name: columnName },
         {
@@ -26,19 +24,26 @@ export const useKanban = defineStore("kanban", {
           }
         }
       )
-    },
-    deleteList(id) {
-      this.lists.splice(id, 1)
 
-      axios.delete("http://localhost:3000/kanban/delete-list", {
+      const listId = listResponse.data.id
+      this.lists.push({ id: listId, name: columnName, tasks: [] })
+    },
+    async deleteList(id) {
+      const responseDeleted = await axios.delete("http://localhost:3000/kanban/delete-list", {
         headers: {
           "Content-Type": "application/json"
         },
         data: { id }
       })
+
+      if (responseDeleted.data.ok) {
+        const listToBeDeleted = this.lists.findIndex(list => list.id === id)
+        this.lists.splice(listToBeDeleted, 1)
+      }
     },
     addNewTask(taskName, columnId) {
-      this.lists[columnId].tasks.push({ name: taskName })
+      const taskList = this.lists.find(list => list.id === columnId)
+      taskList.tasks.push({ name: taskName })
 
       axios.post(
         "http://localhost:3000/kanban/add-new-task",

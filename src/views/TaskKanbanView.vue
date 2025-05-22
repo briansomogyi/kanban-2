@@ -18,7 +18,7 @@ onMounted(() => {
       v-for="(list, index) in kanbanStore.lists"
       :key="index"
       :columnName="list.name"
-      :columnId="index"
+      :columnId="list.id"
     />
     <AddNewList />
   </div>

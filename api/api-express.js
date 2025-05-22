@@ -5,7 +5,7 @@ const router = express.Router()
 const api = express()
 const port = 3000
 
-import { List, Task } from "./db.js"
+import { List, sequelize, Task } from "./db.js"
 
 // Add headers before the routes are defined
 api.use(function (req, res, next) {
@@ -63,10 +63,13 @@ api.get("/kanban", async (req, res) => {
   // res.send(JSON.stringify(lists))
 })
 
-api.post("/kanban/add-new-list", (req, res) => {
+api.post("/kanban/add-new-list", async (req, res) => {
   const { name } = req.body
-  List.create({ name: name })
+
+  const list = await List.create({ name: name })
   // lists.push({ name: name, tasks: [] })
+
+  res.send(JSON.stringify({ id: list.id }))
 })
 
 api.post("/kanban/add-new-task", (req, res) => {
@@ -75,15 +78,39 @@ api.post("/kanban/add-new-task", (req, res) => {
   //lists[columnId].tasks.push({ name })
 })
 
-api.delete("/kanban/delete-list", (req, res) => {
+api.delete("/kanban/delete-list", async (req, res) => {
   // console.log("DELETE")
   const { id } = req.body
-  List.destroy({
-    where: {
-      id: id
-    }
-  })
-  // lists.splice(id, 1)
+
+  const t = await sequelize.transaction()
+  try {
+    await List.destroy(
+      {
+        where: {
+          id: id
+        }
+      },
+      { transaction: t }
+    )
+
+    await Task.destroy(
+      {
+        where: {
+          ListId: id
+        }
+      },
+      { transaction: t }
+    )
+
+    await t.commit()
+  } catch (error) {
+    await t.rollback()
+    console.log(error)
+    res.send(JSON.stringify({ error: "NO DELETED" }))
+    return
+  }
+
+  res.send(JSON.stringify({ ok: "DELETED" }))
 })
 
 api.listen(port, () => {
