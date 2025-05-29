@@ -2,6 +2,8 @@ import { defineStore } from "pinia"
 
 import axios from "axios"
 
+import { ws } from "../ws"
+
 export const useKanban = defineStore("kanban", {
   state: () => {
     return {
@@ -27,6 +29,8 @@ export const useKanban = defineStore("kanban", {
 
       const listId = listResponse.data.id
       this.lists.push({ id: listId, name: columnName, tasks: [] })
+
+      ws.send(JSON.stringify(this.lists))
     },
     async deleteList(id) {
       const responseDeleted = await axios.delete("http://localhost:3000/kanban/delete-list", {
@@ -54,6 +58,8 @@ export const useKanban = defineStore("kanban", {
           }
         }
       )
+
+      ws.send(JSON.stringify(this.lists))
     }
   }
 })

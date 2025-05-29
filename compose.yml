@@ -33,8 +33,26 @@ services:
     volumes:
       - ./api:/api
       # exclude
-      # - /api/.git/
+      - /api/.git/
     working_dir: /api
+    user: 1000:1000
+
+  ws:
+    build: .docker/ws
+    stdin_open: true
+    tty: true
+    container_name: ws.kanban
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: true
+      CHOKIDAR_INTERVAL: 100
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./ws:/ws
+      # exclude
+      - /ws/.git/
+    working_dir: /ws
     user: 1000:1000
 
   mysql:
